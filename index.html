@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <canvas id="dots-bg" aria-hidden="true"></canvas>
   <main class="site container">
     <header class="hero reveal">
       <img class="hero-logo" src="assets/hl-logo.svg" alt="Herding Labs logo">
@@ -77,5 +78,6 @@
 
     document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
   </script>
+  <script src="js/dots.js"></script>
 </body>
 </html>
