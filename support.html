@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support | Herding Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="site">
+    <header class="site-header reveal">
+      <a class="brand" href="/">
+        <img src="assets/hl-logo.svg" alt="Herding Labs logo" width="28" height="28">
+        <span>Herding Labs</span>
+      </a>
+    </header>
+
+    <article class="prose reveal">
+      <h1 class="page-title">Support</h1>
+
+      <p class="support-copy">Need help? Found a bug? Have an idea?
+
+I read every message. Seriously. One-person studio means your email lands in my actual inbox, not a ticket queue.
+
+Email: support@herdinglabs.com</p>
+
+      <h2>Subscription issues</h2>
+      <p>If your trial, renewal, or cancellation is not behaving as expected, include your app name and the Apple account region so I can help you resolve it quickly.</p>
+
+      <h2>Bug reports</h2>
+      <p>Send the device model, iOS version, and clear reproduction steps. Screenshots are useful when available and help narrow down edge cases faster.</p>
+
+      <h2>Feature requests</h2>
+      <p>Share the problem you are trying to solve, not just the feature. Context helps prioritize practical improvements over checkbox additions.</p>
+
+      <h2>Account deletion</h2>
+      <p>Request deletion by email from the account address you use in the app. I will confirm completion after data removal is processed.</p>
+    </article>
+
+    <footer class="site-footer reveal">
+      <span>&copy; 2026 Herding Labs</span>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="/privacy/grayne.html">Privacy</a>
+        <span>&middot;</span>
+        <a href="/terms.html">Terms</a>
+        <span>&middot;</span>
+        <a href="/support.html">Support</a>
+      </nav>
+    </footer>
+  </main>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>
