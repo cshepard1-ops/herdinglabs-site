@@ -3,7 +3,7 @@
   --text: #2D2D2D;
   --sage: #7D8E7F;
   --white: #FFFFFF;
-  --shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(0, 0, 0, 0.07);
 }
 
 * {
@@ -27,9 +27,17 @@ a {
   color: inherit;
 }
 
+.container,
 .site {
+  width: 100%;
   max-width: 720px;
   margin: 0 auto;
+}
+
+:focus-visible {
+  outline: 2px solid #7D8E7F;
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 .site-header {
@@ -64,7 +72,8 @@ h1 {
 
 .hero p {
   margin-top: 12px;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 
 section {
@@ -96,7 +105,7 @@ section {
 .section-label::after {
   content: "";
   display: block;
-  width: 24px;
+  width: 28px;
   height: 2px;
   background: var(--sage);
   margin-top: 8px;
@@ -120,7 +129,7 @@ section {
 
 .app-card-content {
   min-height: 420px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .app-icon {
@@ -152,11 +161,10 @@ section {
 }
 
 .pull-quote {
-  font-size: 18px;
-  font-style: italic;
+  font-size: 19px;
   color: #2D2D2D;
-  border-left: 3px solid var(--sage);
-  padding-left: 13px;
+  border-left: 3px solid rgba(125, 142, 127, 0.6);
+  padding-left: 14px;
   margin: 20px 0 0;
 }
 
@@ -195,6 +203,11 @@ section {
   margin: 0 0 20px;
 }
 
+.about-aside {
+  font-size: 14px;
+  color: rgba(45, 45, 45, 0.65);
+}
+
 .site-footer {
   margin-top: 100px;
   padding: 32px 0 42px;
@@ -212,13 +225,21 @@ section {
 }
 
 .site-footer a {
+  font-size: 14px;
   text-decoration: none;
-  color: #2D2D2D;
+  color: rgba(45, 45, 45, 0.75);
 }
 
-.site-footer a:hover,
-.site-footer a:focus-visible {
+.site-footer a:hover {
+  color: #2D2D2D;
   text-decoration: underline;
+}
+
+.site-footer a:focus-visible {
+  color: #2D2D2D;
+  text-decoration: underline;
+  outline: 2px solid #7D8E7F;
+  outline-offset: 2px;
 }
 
 .prose {
