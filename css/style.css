@@ -72,10 +72,11 @@ a {
 }
 
 .hero-logo {
-  width: 56px;
-  height: 56px;
+  width: 110px;
+  height: 110px;
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  object-fit: contain;
 }
 
 h1 {
@@ -335,4 +336,9 @@ section {
     align-items: flex-start;
     gap: 8px;
   }
+}
+
+.grayne-icon {
+  width: 64px;
+  height: 64px;
 }
