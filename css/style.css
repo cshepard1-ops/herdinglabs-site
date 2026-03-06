@@ -144,8 +144,17 @@ section {
 }
 
 .app-card-content {
-  min-height: 420px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 16px;
+}
+
+.icon-wrap {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
 .app-icon {
@@ -153,7 +162,6 @@ section {
   height: 80px;
   border-radius: 20px;
   display: block;
-  margin-bottom: 24px;
 }
 
 .app-card h2 {
@@ -341,4 +349,10 @@ section {
 .grayne-icon {
   width: 64px;
   height: 64px;
+}
+
+.mynim-icon {
+  width: 56px;
+  height: auto;
+  border-radius: 0;
 }
