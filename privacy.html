@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy | Herding Labs</title>
+  <meta name="description" content="Privacy Policy for Herding Labs apps. What data we collect, how it is used, and your rights.">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=5">
+</head>
+<body>
+  <main class="site">
+    <header class="site-header reveal">
+      <a class="brand" href="/">
+        <img src="assets/hl-icon.png" alt="Herding Labs" width="28" height="28" style="object-fit:contain;">
+        <span>Herding Labs</span>
+      </a>
+    </header>
+
+    <article class="prose reveal">
+      <h1 class="page-title">Privacy Policy</h1>
+      <p class="notice"><strong>Effective date:</strong> March 2026. This policy applies to all apps and services published by Herding Labs. It explains what information we process, why, and your rights.</p>
+
+      <h2>1. The short version</h2>
+      <ul>
+        <li>We do not sell your personal information.</li>
+        <li>We do not use your data for targeted advertising.</li>
+        <li>We process the inputs you provide to make app features work.</li>
+        <li>You can request export or deletion by emailing support@herdinglabs.com.</li>
+      </ul>
+
+      <h2>2. Information we may collect or process</h2>
+      <p>Depending on which app you use and how, we may process:</p>
+      <ul>
+        <li><strong>Content you provide</strong> — photos, text, logs, entries, and other information you add while using the app.</li>
+        <li><strong>Account and device identifiers</strong> — needed to keep the app working, such as login identifiers and subscription status via Apple.</li>
+        <li><strong>Usage and diagnostics</strong> — crash logs and performance events used to improve reliability.</li>
+        <li><strong>Location context</strong> — general location, only if you grant permission, used for location-aware features (such as weather-based suggestions).</li>
+      </ul>
+      <p><strong>Payments:</strong> subscriptions and billing are handled entirely by Apple. Herding Labs does not receive your full payment card details.</p>
+
+      <h2>3. How we use information</h2>
+      <ul>
+        <li>To operate core app features you request.</li>
+        <li>To personalize your experience based on your content and preferences.</li>
+        <li>To maintain subscriptions and entitlements through Apple.</li>
+        <li>To diagnose bugs, prevent abuse, and improve stability.</li>
+        <li>To respond to support requests.</li>
+      </ul>
+
+      <h2>4. AI processing</h2>
+      <p>Some features use AI to analyze content or generate results. When you use those features, relevant inputs may be sent securely to AI providers for processing. The purpose is to generate the result you requested. We share only what is needed for the feature to function.</p>
+
+      <h2>5. Third-party services</h2>
+      <p>Our apps may rely on third-party services to operate, including:</p>
+      <ul>
+        <li><strong>Apple</strong> (StoreKit) for subscriptions and billing.</li>
+        <li><strong>AI providers</strong> for AI-powered features.</li>
+        <li><strong>Analytics or crash reporting tools</strong> to monitor app health.</li>
+      </ul>
+      <p>These providers process data under their own terms and security practices.</p>
+
+      <h2>6. Data retention</h2>
+      <p>We keep information only as long as needed to provide the services, comply with legal obligations, and resolve disputes. You may request deletion at any time.</p>
+
+      <h2>7. Your choices and rights</h2>
+      <p>You may request access, correction, export, or deletion of your data by emailing support@herdinglabs.com. You can stop using any app at any time by removing it and managing subscriptions through your Apple account settings.</p>
+
+      <h2>8. Security</h2>
+      <p>We use reasonable safeguards to protect information against unauthorized access, disclosure, or misuse. No system is perfectly secure, but we take security seriously and improve controls as our products evolve.</p>
+
+      <h2>9. Children's privacy</h2>
+      <p>Our apps are intended for users age 13 and older unless otherwise stated, and are not directed to children under 13.</p>
+
+      <h2>10. Changes to this policy</h2>
+      <p>This policy may be updated from time to time. Material changes will be reflected by an updated effective date and, when appropriate, notice in the app or on this site.</p>
+
+      <h2>11. Contact</h2>
+      <p>Questions about this policy can be sent to support@herdinglabs.com.</p>
+    </article>
+
+    <footer class="site-footer reveal">
+      <span>&copy; 2026 Herding Labs</span>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="/privacy.html">Privacy</a>
+        <span>&middot;</span>
+        <a href="/terms.html">Terms</a>
+        <span>&middot;</span>
+        <a href="/support.html">Support</a>
+      </nav>
+    </footer>
+  </main>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>
