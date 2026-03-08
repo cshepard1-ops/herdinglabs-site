@@ -1,0 +1,1664 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mynim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="./assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png" />
+  <script>document.documentElement.classList.add('js');</script>
+  <style>
+    :root {
+      --bg: #0D0D14;
+      --orange: #E8863A;
+      --amber: #F0A050;
+      --coral: #D4603A;
+      --text: #F5F0EB;
+      --muted: #A09A90;
+      --glass: rgba(255, 255, 255, 0.06);
+      --glass-border: rgba(255, 255, 255, 0.10);
+      --line: rgba(255, 255, 255, 0.08);
+      --section-pad: clamp(120px, 14vw, 160px);
+      --container: min(1280px, 92vw);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse 140% 80% at 20% 10%, rgba(232,134,58,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 60% at 80% 90%, rgba(212,96,58,0.06) 0%, transparent 55%),
+        #0D0D14;
+      color: var(--text);
+      font-family: "DM Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body { overflow-x: hidden; }
+
+    #grainCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0.018;
+      mix-blend-mode: screen;
+    }
+
+    h1, h2, h3, h4 {
+      margin: 0;
+      font-family: "Nunito", sans-serif;
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+    }
+
+    p { margin: 0; line-height: 1.72; letter-spacing: 0.008em; }
+
+    a { color: inherit; text-decoration: none; }
+
+    .mono {
+      font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.10em;
+    }
+
+    .container {
+      width: var(--container);
+      margin: 0 auto;
+    }
+
+    .section {
+      position: relative;
+      padding: var(--section-pad) 0;
+    }
+
+    .blob-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(80px);
+      opacity: 0.85;
+    }
+
+    .fade-up {
+      opacity: 1;
+      transform: none;
+    }
+
+    .js .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 700ms ease, transform 700ms ease;
+    }
+
+    .js .fade-up.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero {
+      min-height: 100vh;
+      max-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: stretch;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: max(12vh, 96px) 6vw 64px 8vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.6rem, 7.6vw, 6rem);
+      max-width: 12ch;
+    }
+
+    .hero p {
+      max-width: 60ch;
+      color: #ded8d1;
+      font-size: clamp(1.04rem, 2vw, 1.32rem);
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0.8rem 1.5rem;
+      border-radius: 999px;
+      background: var(--orange);
+      color: #1a120f;
+      font-weight: 700;
+      position: relative;
+      overflow: hidden;
+      transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease;
+      box-shadow: 0 16px 44px rgba(232, 134, 58, 0.28);
+    }
+
+    .cta::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
+      transform: translateX(-100%);
+      transition: transform 500ms ease;
+    }
+
+    .cta:hover,
+    .cta:focus-visible {
+      transform: scale(1.02);
+      box-shadow: 0 24px 56px rgba(232, 134, 58, 0.42);
+      background: var(--amber);
+    }
+
+    .cta:hover::after,
+    .cta:focus-visible::after {
+      transform: translateX(100%);
+    }
+
+    .hero-meta {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .hero-right {
+      position: relative;
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 40px 0;
+    }
+
+    .hero-phone {
+      display: block;
+      height: min(68vh, 600px);
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 32px 60px rgba(232, 134, 58, 0.20));
+    }
+
+    .hero-bottom {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 12px 6vw;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .problem {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(30px, 6vw, 90px);
+      align-items: stretch;
+    }
+
+    .problem-copy h2,
+    .curve-copy h2,
+    .map-copy h2,
+    .rail-intro h2,
+    .pricing-copy h2,
+    .faq h2,
+    .footer-cta h2 {
+      font-size: clamp(2rem, 5.4vw, 3.6rem);
+      margin-bottom: 20px;
+      max-width: 15ch;
+    }
+
+    .problem-copy p {
+      margin-bottom: 14px;
+      max-width: 60ch;
+      color: #d8d1c9;
+    }
+
+    .ticker {
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: var(--radius);
+      min-height: 380px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      text-align: center;
+      backdrop-filter: blur(16px);
+    }
+
+    .ticker-card {
+      width: min(560px, 100%);
+      min-height: 380px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      display: grid;
+      place-items: center;
+      padding: 32px 24px;
+      opacity: 0;
+      transition: opacity 500ms ease;
+    }
+
+    .ticker-card.active {
+      opacity: 1;
+    }
+
+    .ticker-card p {
+      color: #ddd3c6;
+      font-size: 1.1rem;
+      line-height: 1.72;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+    }
+
+    .ticker-card .arrow {
+      color: var(--orange);
+      margin-right: 8px;
+    }
+
+    .curve-wrap {
+      min-height: 100vh;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .curve-copy {
+      width: var(--container);
+      margin: 0 auto;
+      padding: 130px 0 42px;
+    }
+
+    .curve-copy p {
+      color: #ded5ca;
+      max-width: 70ch;
+      margin-bottom: 22px;
+      line-height: 1.72;
+    }
+
+    .curve-controls {
+      width: var(--container);
+      margin: 0 auto 16px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .curve-toggle {
+      border: 1px solid rgba(255,255,255,0.24);
+      color: #d7d0c6;
+      background: transparent;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-family: "JetBrains Mono", "SFMono-Regular", monospace;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      cursor: pointer;
+      transition: background 220ms ease, color 220ms ease, border-color 220ms ease;
+    }
+
+    .curve-toggle.active {
+      background: var(--orange);
+      border-color: rgba(232, 134, 58, 0.9);
+      color: #1a120f;
+    }
+
+    .chart-shell {
+      overflow-x: auto;
+      padding-bottom: 12px;
+    }
+
+    .chart-shell svg {
+      display: block;
+      width: 100%;
+      min-width: 980px;
+      height: clamp(340px, 54vh, 620px);
+    }
+
+    .axis-label {
+      fill: #a9a296;
+      font-size: 12px;
+      font-family: "JetBrains Mono", "SFMono-Regular", monospace;
+    }
+
+    #curveMain,
+    #curveWeekly,
+    .micro-fill,
+    .dose-line,
+    .dose-dot,
+    .marker-set {
+      opacity: 0;
+      transition: opacity 600ms ease;
+    }
+
+    .curve-live #curveMain,
+    .curve-live #curveWeekly,
+    .curve-live .micro-fill,
+    .curve-live .dose-line,
+    .curve-live .dose-dot,
+    .curve-live .marker-set {
+      opacity: 1;
+    }
+
+    #curveSection.curve-live.mode-micro #curveWeekly,
+    #curveSection.curve-live.mode-micro .weekly-markers {
+      opacity: 0;
+    }
+
+    #curveSection.curve-live.mode-weekly #curveMain,
+    #curveSection.curve-live.mode-weekly .micro-fill,
+    #curveSection.curve-live.mode-weekly .micro-markers {
+      opacity: 0;
+    }
+
+    #curveMain {
+      stroke: var(--orange);
+      stroke-width: 3;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    #curveWeekly {
+      stroke: #f0a050;
+      stroke-opacity: 0.92;
+      stroke-width: 2.4;
+      stroke-dasharray: 12 11;
+      fill: none;
+    }
+
+    .dose-line {
+      stroke-opacity: 0.88;
+      stroke-width: 2;
+    }
+
+    .dose-dot { fill: #f9b37d; }
+
+    .micro-markers .dose-line { stroke: var(--orange); }
+    .micro-markers .dose-dot { fill: var(--orange); }
+    .weekly-markers .dose-line { stroke: #f0a050; }
+    .weekly-markers .dose-dot { fill: #f0a050; }
+
+    .chart-legend {
+      width: var(--container);
+      margin: 4px auto 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      color: #d9d2c8;
+      font-size: 0.86rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .legend-line {
+      width: 28px;
+      height: 2px;
+      display: inline-block;
+      border-radius: 3px;
+      background: var(--orange);
+    }
+
+    .legend-line.weekly {
+      background: transparent;
+      border-top: 2px dashed #f0a050;
+    }
+
+    .chart-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+      padding: 10px 14px 22px;
+    }
+
+    .feature-scroller {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: clamp(24px, 4vw, 48px);
+      align-items: start;
+    }
+
+    .feature-mobile {
+      display: none;
+    }
+
+    .feature-panel {
+      position: sticky;
+      top: 72px;
+      padding: 34px;
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      min-height: 320px;
+      align-self: start;
+    }
+
+    .feature-index {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 18px;
+    }
+
+    .feature-panel h3 {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      margin-bottom: 14px;
+      max-width: 16ch;
+    }
+
+    .feature-panel p {
+      color: #ddd5cc;
+      max-width: 52ch;
+      margin-bottom: 10px;
+    }
+
+    .feature-right {
+      position: relative;
+    }
+
+    .shot-frame {
+      position: sticky;
+      top: 72px;
+      height: min(72vh, 720px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      overflow: hidden;
+      background: #171720;
+      box-shadow: 0 40px 80px rgba(232, 134, 58, 0.12);
+    }
+
+    .shot-frame::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 30%;
+      background: linear-gradient(to bottom, transparent 0%, #171720 100%);
+      pointer-events: none;
+      z-index: 2;
+      border-radius: 0 0 24px 24px;
+    }
+
+    .shot-frame img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: top center;
+      opacity: 0;
+      transition: opacity 300ms ease;
+    }
+
+    .shot-frame img.active {
+      opacity: 1;
+    }
+
+    .feature-step {
+      height: 82vh;
+      min-height: 560px;
+    }
+
+    .feature-mobile-card {
+      border: 1px solid var(--glass-border);
+      border-radius: 22px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+      margin-bottom: 22px;
+    }
+
+    .feature-mobile-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    .feature-mobile-copy {
+      padding: 22px 20px 24px;
+    }
+
+    .feature-mobile-copy .feature-index {
+      margin-bottom: 12px;
+    }
+
+    .feature-mobile-copy h3 {
+      font-size: clamp(1.5rem, 6vw, 2.1rem);
+      margin-bottom: 12px;
+    }
+
+    .feature-mobile-copy p {
+      color: #ddd5cc;
+      margin-bottom: 10px;
+    }
+
+    .map-band {
+      padding: 0;
+    }
+
+    .map-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 82vh;
+    }
+
+    .map-img {
+      min-height: 100%;
+    }
+
+    .map-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .map-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(44px, 8vw, 100px);
+    }
+
+    .map-copy p {
+      max-width: 60ch;
+      margin-bottom: 14px;
+      color: #ddd3c7;
+    }
+
+    .rail-wrap {
+      min-height: 220vh;
+      position: relative;
+    }
+
+    .rail-sticky {
+      position: sticky;
+      top: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .rail-intro {
+      width: var(--container);
+      margin: 0 auto 28px;
+    }
+
+    .rail-track {
+      display: flex;
+      gap: 24px;
+      width: max-content;
+      padding-left: max(4vw, calc((100vw - var(--container)) / 2));
+      padding-right: 10vw;
+      will-change: transform;
+    }
+
+    .rail-card {
+      width: min(460px, 86vw);
+      border: 1px solid var(--glass-border);
+      border-radius: 22px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+    }
+
+    .rail-card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .rail-card .txt {
+      padding: 20px;
+    }
+
+    .rail-card h4 {
+      font-size: 1.32rem;
+      margin-bottom: 10px;
+    }
+
+    .rail-card p {
+      color: #d8d1c8;
+      font-size: 0.97rem;
+    }
+
+    .how {
+      margin-top: 24px;
+    }
+
+    .how-top {
+      text-align: right;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 18px;
+      border-right: 2px solid var(--orange);
+      padding-right: 14px;
+    }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .how-step {
+      padding: 44px 28px 52px;
+      border-right: 1px solid var(--line);
+      position: relative;
+    }
+
+    .how-step:last-child { border-right: 0; }
+
+    .how-num {
+      font-size: 3.8rem;
+      color: rgba(232, 134, 58, 0.3);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .how-step h4 {
+      font-size: 1.24rem;
+      margin-bottom: 8px;
+    }
+
+    .how-step p { color: #d7cfc5; }
+
+    .manifest {
+      margin-top: 72px;
+    }
+
+    .manifest h3 {
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      margin-bottom: 16px;
+    }
+
+    .manifest-row {
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 0;
+      gap: 16px;
+    }
+
+    .manifest-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+    .manifest-row strong {
+      color: var(--muted);
+      font-family: "JetBrains Mono", "SFMono-Regular", monospace;
+      font-size: 0.88rem;
+      letter-spacing: 0.10em;
+      text-transform: none;
+      padding-top: 2px;
+    }
+
+    .manifest-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin: 24px 0 18px;
+    }
+
+    .manifest-card {
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      padding: 28px 24px;
+      min-height: 180px;
+    }
+
+    .manifest-card svg {
+      width: 32px;
+      height: 32px;
+      margin-bottom: 14px;
+      color: var(--orange);
+    }
+
+    .manifest-card h4 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .manifest-card p {
+      color: #d8d0c4;
+      font-size: 0.96rem;
+    }
+
+    .manifest-row span {
+      color: #ddd6cc;
+    }
+
+    .pricing {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(26px, 6vw, 90px);
+      align-items: center;
+    }
+
+    .price {
+      font-family: "JetBrains Mono", "SFMono-Regular", monospace;
+      font-size: clamp(4.2rem, 14vw, 11rem);
+      color: #f5b98d;
+      line-height: 0.95;
+      margin-bottom: 18px;
+      text-shadow: 0 0 80px rgba(232, 134, 58, 0.35);
+    }
+
+    .pricing-copy h2 {
+      margin-bottom: 16px;
+    }
+
+    .pricing-copy p {
+      max-width: 58ch;
+      color: #ddd3c8;
+      margin-bottom: 12px;
+    }
+
+    .pricing-cta {
+      justify-self: center;
+      text-align: center;
+    }
+
+    .pricing-cta .cta {
+      min-width: 220px;
+      min-height: 56px;
+      font-size: 1.02rem;
+    }
+
+    .pricing-cta .cta + .cta,
+    .pricing-cta .cta + small {
+      margin-top: 14px;
+    }
+
+    .pricing-cta small {
+      display: block;
+      margin-top: 12px;
+      color: var(--muted);
+    }
+
+    .faq h2 {
+      margin-bottom: 28px;
+    }
+
+    .faq-list {
+      border-top: 1px solid var(--line);
+      margin-top: 20px;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .faq-q {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      padding: 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.03rem;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .faq-q span:last-child {
+      font-size: 1.4rem;
+      color: var(--muted);
+      transition: transform 220ms ease;
+    }
+
+    .faq-item.open .faq-q span:last-child { transform: rotate(180deg); }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      color: #cdc4b7;
+      transition: max-height 360ms cubic-bezier(0.4, 0, 0.2, 1), padding 360ms ease;
+      padding-right: 14%;
+      padding-bottom: 0;
+    }
+
+    .faq-a p {
+      margin: 0 0 18px;
+    }
+
+    .footer-cta {
+      min-height: 84vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .footer-cta .inner {
+      position: relative;
+      z-index: 1;
+      padding: 0 20px;
+    }
+
+    .footer-cta h2 {
+      margin: 0 auto 16px;
+      max-width: 14ch;
+      font-size: clamp(2rem, 6vw, 4.4rem);
+    }
+
+    .footer-cta .cta {
+      min-width: 220px;
+    }
+
+    .footer-cta p {
+      margin-top: 14px;
+      color: var(--muted);
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 26px 0 52px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .footer-row {
+      width: var(--container);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-small {
+      width: var(--container);
+      margin: 14px auto 0;
+      font-size: 0.84rem;
+      color: #8f887e;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { min-height: 35vh; justify-content: center; }
+      .hero-phone { height: min(50vh, 480px); }
+      .problem,
+      .map-split,
+      .pricing { grid-template-columns: 1fr; }
+      .feature-scroller { display: none; }
+      .feature-mobile { display: block; }
+      .rail-wrap {
+        min-height: 180vh;
+      }
+      .how-grid { grid-template-columns: 1fr; }
+      .how-step {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        min-height: 0;
+      }
+      .how-step:last-child { border-bottom: 0; }
+      .manifest-row { grid-template-columns: 1fr; gap: 8px; }
+      .manifest-grid { grid-template-columns: 1fr 1fr; }
+      .price { font-size: clamp(3rem, 18vw, 6rem); }
+    }
+
+    @media (max-width: 740px) {
+      .section { padding: 120px 0; }
+      .hero-content {
+        padding: 90px 6vw 84px;
+      }
+      .hero h1 { font-size: clamp(2.4rem, 12vw, 3.1rem); }
+      .hero-bottom {
+        justify-content: flex-start;
+        font-size: 0.78rem;
+      }
+      /* Hide phone on mobile — hero content is enough */
+      .hero-right { display: none; }
+      /* Curve: kill the full-height requirement on mobile */
+      .curve-wrap { min-height: 0; }
+      .curve-copy { padding-top: 60px; }
+      .chart-shell { overflow-x: hidden; }
+      .chart-shell svg { min-width: 0; width: 100%; height: auto; }
+      .ticker { width: 100%; }
+      .ticker-card { width: 100%; }
+      .faq-a { padding-right: 0; }
+      .manifest-card { min-height: auto; }
+      .price { font-size: clamp(3.2rem, 16vw, 5.5rem); }
+      .pricing-cta {
+        justify-self: stretch;
+      }
+      .pricing-cta .cta {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .manifest-grid { grid-template-columns: 1fr; }
+    }
+
+    .site-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 6vw;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      background: rgba(13, 13, 20, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      transition: background 300ms ease;
+    }
+
+    .nav-inner {
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo img {
+      display: block;
+      height: 28px;
+      width: auto;
+    }
+
+    .nav-cta {
+      min-height: 36px;
+      padding: 0 18px;
+      font-size: 0.88rem;
+    }
+
+    /* Push hero content below fixed nav */
+    .hero-content {
+      padding-top: max(14vh, 110px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .blob-canvas,
+      .js .fade-up,
+      .shot-frame img,
+      .rail-track,
+      .faq-a,
+      .faq-q span:last-child,
+      .cta,
+      .cta::after,
+      .ticker-card { transition: none !important; animation: none !important; }
+      .js .fade-up { opacity: 1; transform: none; }
+      #curveMain,
+      #curveWeekly,
+      .dose-line,
+      .dose-dot {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="grainCanvas" aria-hidden="true"></canvas>
+
+  <nav class="site-nav" aria-label="Site navigation">
+    <div class="nav-inner">
+      <a href="#top" class="nav-logo" aria-label="Mynim home">
+        <img src="./assets/mynim-logo-white.png" alt="Mynim" height="32" />
+      </a>
+      <a class="cta nav-cta" href="#" aria-label="Download Mynim on the App Store">Coming Soon</a>
+    </div>
+  </nav>
+
+  <section class="hero" id="top">
+    <canvas class="blob-canvas" id="heroBlob" aria-hidden="true"></canvas>
+    <div class="hero-content fade-up">
+      <div class="eyebrow">Precision GLP-1 tracking</div>
+      <h1>Your dose. Your schedule. Your data.</h1>
+      <p>Mynim is the GLP-1 tracker built for microdosers. Live concentration curves. Smart site rotation. Real pharmacokinetic math. Not another weekly shot reminder.</p>
+      <div>
+        <a class="cta" href="#" aria-label="Try free for 7 days on the App Store">Coming Soon</a>
+      </div>
+      <div class="hero-meta">$1.99/month after trial. Cancel anytime.</div>
+    </div>
+    <div class="hero-right">
+      <img class="hero-phone" src="./assets/hero-phone.png" alt="Mynim app showing concentration curve at steady state" />
+    </div>
+
+  </section>
+
+  <section class="section">
+    <div class="container problem">
+      <div class="problem-copy fade-up">
+        <h2>You're not doing this the standard way. Why is every app built like you are?</h2>
+        <p>You split your doses. You inject more often than once a week. You track half-lives in your head and wonder what your actual drug levels look like between shots.</p>
+        <p>You've done the research. You know what bioavailability means. You've read the studies.</p>
+        <p>But every GLP-1 app out there assumes you take one shot per week and want a reminder about it. That's it. That's the whole product.</p>
+        <p>You deserve better tools than a calendar notification.</p>
+      </div>
+      <div class="ticker fade-up" aria-hidden="true">
+        <article class="ticker-card mono active"><p><span class="arrow">→</span>is 0.125mg daily the same as 0.875mg weekly?</p></article>
+        <article class="ticker-card mono"><p><span class="arrow">→</span>forgot which side I injected last time</p></article>
+        <article class="ticker-card mono"><p><span class="arrow">→</span>nausea worse on days 3-4, why?</p></article>
+        <article class="ticker-card mono"><p><span class="arrow">→</span>wish I could see my actual levels</p></article>
+        <article class="ticker-card mono"><p><span class="arrow">→</span>split my pen again today</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="curve-wrap mode-both" id="curveSection">
+    <div class="curve-copy fade-up">
+      <h2>Pharmacokinetics. On your phone.</h2>
+      <p>Most people taking GLP-1 medications have no idea what their blood concentration looks like between doses. They feel good, they feel bad, they don't know why.</p>
+      <p>Mynim models your concentration curve in real time using the published pharmacokinetic data for your specific medication. Semaglutide. Tirzepatide. GLP-1/GIP combinations.</p>
+      <p>You see the rise. You see the peak. You see the taper. And when you're microdosing, you see how multiple small doses create a different concentration profile than a single weekly injection.</p>
+      <p>That's not a gimmick. That's information you can act on.</p>
+    </div>
+
+    <div class="chart-shell">
+      <svg viewBox="0 0 1200 520" role="img" aria-label="Concentration curve over time">
+        <defs>
+          <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E8863A" stop-opacity="0.35" />
+            <stop offset="100%" stop-color="#E8863A" stop-opacity="0" />
+          </linearGradient>
+          <clipPath id="microFillClip">
+            <path id="microFillPath" d="M90 430 C150 255 220 222 300 210 C385 199 455 194 540 186 C625 180 705 178 790 176 C875 174 955 173 1045 172 C1085 172 1110 173 1130 175 L1130 430 L90 430 Z" />
+          </clipPath>
+        </defs>
+        <rect x="0" y="0" width="1200" height="520" fill="transparent" />
+        <line x1="90" y1="70" x2="90" y2="430" stroke="rgba(255,255,255,0.2)" />
+        <line x1="90" y1="430" x2="1130" y2="430" stroke="rgba(255,255,255,0.2)" />
+        <text x="20" y="250" class="axis-label">ng/mL</text>
+        <text x="1070" y="468" class="axis-label">hours</text>
+
+        <rect class="micro-fill" x="90" y="120" width="1040" height="310" fill="url(#fillGrad)" clip-path="url(#microFillClip)" />
+        <path id="curveWeekly" d="M90 432 C120 80 170 78 230 300 C280 440 360 435 440 420 C520 404 560 118 620 112 C700 104 760 392 840 414 C920 433 960 155 1045 152 C1088 150 1112 196 1130 226" />
+        <path id="curveMain" d="M90 430 C150 255 220 222 300 210 C385 199 455 194 540 186 C625 180 705 178 790 176 C875 174 955 173 1045 172 C1085 172 1110 173 1130 175" />
+
+        <g class="marker-set weekly-markers">
+          <line class="dose-line" x1="120" y1="430" x2="120" y2="80" />
+          <circle class="dose-dot" cx="120" cy="80" r="6" />
+          <line class="dose-line" x1="560" y1="430" x2="560" y2="118" />
+          <circle class="dose-dot" cx="560" cy="118" r="6" />
+          <line class="dose-line" x1="960" y1="430" x2="960" y2="155" />
+          <circle class="dose-dot" cx="960" cy="155" r="6" />
+        </g>
+        <g class="marker-set micro-markers">
+          <line class="dose-line" x1="210" y1="430" x2="210" y2="224" />
+          <circle class="dose-dot" cx="210" cy="224" r="5" />
+          <line class="dose-line" x1="420" y1="430" x2="420" y2="196" />
+          <circle class="dose-dot" cx="420" cy="196" r="5" />
+          <line class="dose-line" x1="630" y1="430" x2="630" y2="180" />
+          <circle class="dose-dot" cx="630" cy="180" r="5" />
+          <line class="dose-line" x1="840" y1="430" x2="840" y2="175" />
+          <circle class="dose-dot" cx="840" cy="175" r="5" />
+          <line class="dose-line" x1="1050" y1="430" x2="1050" y2="172" />
+          <circle class="dose-dot" cx="1050" cy="172" r="5" />
+        </g>
+      </svg>
+    </div>
+
+  </section>
+
+  <section class="section">
+    <div class="container feature-scroller">
+      <div class="feature-panel fade-up" id="featurePanel">
+        <div class="feature-index mono" id="featureNum">01</div>
+        <h3 id="featureTitle">See what's happening inside you. In real time.</h3>
+        <p id="featurePara1">Mynim calculates your active drug concentration using actual pharmacokinetic modeling. Half-life, absorption rate, bioavailability. Real math, not estimates.</p>
+        <p id="featurePara2">Watch your levels rise after a dose and taper as your body metabolizes. Know exactly where you stand before your next injection.</p>
+        <p id="featurePara3">This isn't a graph someone designed to look clinical. It's a graph that IS clinical.</p>
+      </div>
+      <div class="feature-right">
+        <div class="shot-frame fade-up" id="shotFrame">
+          <img src="./assets/home-with-data.jpg" alt="Mynim dashboard showing concentration at steady state" class="active" data-shot="0" />
+          <img src="./assets/home-concentration.jpg" alt="Concentration curve with mood overlay" data-shot="1" />
+          <img src="./assets/injection-map.jpg" alt="Injection site rotation map" data-shot="2" />
+          <img src="./assets/history.jpg" alt="Dose and symptom history" data-shot="3" />
+        </div>
+        <article class="feature-step" data-step="0" aria-hidden="true"></article>
+        <article class="feature-step" data-step="1" aria-hidden="true"></article>
+        <article class="feature-step" data-step="2" aria-hidden="true"></article>
+        <article class="feature-step" data-step="3" aria-hidden="true"></article>
+      </div>
+    </div>
+    <div class="container feature-mobile">
+      <article class="feature-mobile-card fade-up">
+        <img src="./assets/home-with-data.jpg" alt="Mynim dashboard with concentration data" />
+        <div class="feature-mobile-copy">
+          <div class="feature-index mono">01</div>
+          <h3>See what's happening inside you. In real time.</h3>
+          <p>Mynim calculates your active drug concentration using actual pharmacokinetic modeling. Half-life, absorption rate, bioavailability. Real math, not estimates.</p>
+          <p>Watch your levels rise after a dose and taper as your body metabolizes. Know exactly where you stand before your next injection.</p>
+          <p>This isn't a graph someone designed to look clinical. It's a graph that is clinical.</p>
+        </div>
+      </article>
+      <article class="feature-mobile-card fade-up">
+        <img src="./assets/home-concentration.jpg" alt="Concentration curve view in Mynim" />
+        <div class="feature-mobile-copy">
+          <div class="feature-index mono">02</div>
+          <h3>Twice daily. Every three days. Whatever works for you.</h3>
+          <p>Standard GLP-1 apps give you one option: weekly. Mynim gives you full control over your dosing interval. Daily, twice daily, every few days, weekly.</p>
+          <p>Your protocol is your protocol. Mynim tracks it accurately regardless.</p>
+        </div>
+      </article>
+      <article class="feature-mobile-card fade-up">
+        <img src="./assets/injection-map.jpg" alt="Injection site rotation map in Mynim" />
+        <div class="feature-mobile-copy">
+          <div class="feature-index mono">03</div>
+          <h3>Stop guessing where you went last.</h3>
+          <p>Visual body map. Front and back. Mynim tracks every injection site and when you last used it. A clear indicator shows where to go next.</p>
+          <p>Left abdomen, right thigh, upper arm. Rotate properly. Reduce tissue stress. It takes two taps.</p>
+        </div>
+      </article>
+      <article class="feature-mobile-card fade-up">
+        <img src="./assets/history.jpg" alt="Dose and symptom history in Mynim" />
+        <div class="feature-mobile-copy">
+          <div class="feature-index mono">04</div>
+          <h3>Connect the dots between your dose and how you feel.</h3>
+          <p>Log nausea, fatigue, and other side effects by severity after each dose. Track energy, mood, and mental clarity on a 1-10 scale.</p>
+          <p>Over time, patterns emerge. Mynim gives you the data to find out what is actually happening.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" style="border-top: 1px solid rgba(255,255,255,0.06);">
+    <div class="container">
+      <div class="how fade-up">
+        <div class="how-top mono">Three steps. Two minutes. Full visibility.</div>
+        <div class="how-grid">
+          <article class="how-step">
+            <span class="how-num mono">01</span>
+            <h4>Pick your medication</h4>
+            <p>Semaglutide, tirzepatide, or GLP-1/GIP combo. Mynim loads the right pharmacokinetic profile automatically.</p>
+          </article>
+          <article class="how-step">
+            <span class="how-num mono">02</span>
+            <h4>Log your dose</h4>
+            <p>Amount in mg, injection site, any notes. Takes ten seconds.</p>
+          </article>
+          <article class="how-step">
+            <span class="how-num mono">03</span>
+            <h4>Watch the data build</h4>
+            <p>Concentration curves update live. Symptoms trend over time. Patterns surface on their own.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="manifest fade-up">
+        <h3>Everything in one place.</h3>
+        <div class="manifest-grid">
+          <article class="manifest-card">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="8" cy="8" r="4"></circle>
+              <path d="M11 11 L24 24"></path>
+              <path d="M22 18 L28 24 L24 28 L18 22"></path>
+            </svg>
+            <h4>Dose Logging</h4>
+            <p>Track exact mg, timing, and notes in seconds with a dosing workflow built for split protocols.</p>
+          </article>
+          <article class="manifest-card">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 12a10 10 0 0 1 16-4"></path>
+              <path d="M22 8h4v4"></path>
+              <path d="M26 20a10 10 0 0 1-16 4"></path>
+              <path d="M10 24H6v-4"></path>
+            </svg>
+            <h4>Site Rotation</h4>
+            <p>See exactly where you injected last and rotate confidently to reduce repeat-site irritation.</p>
+          </article>
+          <article class="manifest-card">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 18h4l3-7 4 14 3-9 3 5h9"></path>
+            </svg>
+            <h4>Symptom Tracking</h4>
+            <p>Log nausea, fatigue, and mood with severity scores to expose real trends over time.</p>
+          </article>
+          <article class="manifest-card">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 3h12l6 6v20H8z"></path>
+              <path d="M20 3v7h6"></path>
+              <path d="M16 14v9"></path>
+              <path d="M12 19l4 4 4-4"></path>
+            </svg>
+            <h4>PDF Export</h4>
+            <p>Generate complete dose history exports for your records or to review with your clinician.</p>
+          </article>
+        </div>
+        <div class="manifest-row"><strong>Medications</strong><span>Semaglutide (Ozempic, Wegovy), Tirzepatide (Mounjaro, Zepbound), GLP-1/GIP combinations</span></div>
+        <div class="manifest-row"><strong>Dose data</strong><span>Date, time, amount (mg), injection site, notes</span></div>
+        <div class="manifest-row"><strong>Body metrics</strong><span>Weight (with 30-day, 90-day, and all-time trends)</span></div>
+        <div class="manifest-row"><strong>Side effects</strong><span>Nausea, fatigue, headache, and more. Tracked by severity: none, mild, moderate, severe.</span></div>
+        <div class="manifest-row"><strong>Wellness scores</strong><span>Mental clarity, energy, mood. Scored 1 to 10.</span></div>
+        <div class="manifest-row"><strong>Extras</strong><span>PDF export of your full dose history. Smart reminders on your schedule. Injection site rotation tracking.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container pricing fade-up">
+      <div class="pricing-copy">
+        <div class="price">$1.99/mo</div>
+        <p>That's it. One plan. Everything included. No tiers, no upsells, no "premium" features locked behind a higher price.</p>
+        <p>Start with a 7-day free trial. If Mynim isn't useful to you in a week, cancel. No questions. No friction.</p>
+      </div>
+      <div class="pricing-cta">
+        <a class="cta" href="#" aria-label="Start your free trial on the App Store">Coming Soon</a>
+        <small>7-day free trial, then $1.99/month. Cancel anytime in Settings.</small>
+        <small>No tiers. No upsells.</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq">
+    <div class="container fade-up">
+      <h2>FAQ</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" type="button" id="faq-q-1" aria-expanded="false" aria-controls="faq-a-1"><span>Is my data private?</span><span aria-hidden="true">▾</span></button>
+          <div class="faq-a" id="faq-a-1" role="region" aria-labelledby="faq-q-1"><p>Your data stays on your device. Mynim does not upload your health information to any server.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" id="faq-q-2" aria-expanded="false" aria-controls="faq-a-2"><span>How accurate is the concentration curve?</span><span aria-hidden="true">▾</span></button>
+          <div class="faq-a" id="faq-a-2" role="region" aria-labelledby="faq-q-2"><p>The curve uses published pharmacokinetic parameters (half-life, Tmax, bioavailability) for each supported medication. It's a model, not a blood test. But it's built on real science, and it gives you a far better picture than guessing.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" id="faq-q-3" aria-expanded="false" aria-controls="faq-a-3"><span>Is this medical advice?</span><span aria-hidden="true">▾</span></button>
+          <div class="faq-a" id="faq-a-3" role="region" aria-labelledby="faq-q-3"><p>No. Mynim is a tracking tool. It models pharmacokinetic data based on published research, but it does not provide medical guidance. Talk to your doctor about your dosing protocol.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" id="faq-q-4" aria-expanded="false" aria-controls="faq-a-4"><span>What medications are supported?</span><span aria-hidden="true">▾</span></button>
+          <div class="faq-a" id="faq-a-4" role="region" aria-labelledby="faq-q-4"><p>Semaglutide (sold as Ozempic and Wegovy), Tirzepatide (sold as Mounjaro and Zepbound), and GLP-1/GIP combination medications.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" id="faq-q-5" aria-expanded="false" aria-controls="faq-a-5"><span>Can I use this for standard weekly dosing?</span><span aria-hidden="true">▾</span></button>
+          <div class="faq-a" id="faq-a-5" role="region" aria-labelledby="faq-q-5"><p>Yes. Mynim works for any dosing frequency. But it was designed specifically for people on non-standard schedules who need more than a basic reminder app.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" id="faq-q-6" aria-expanded="false" aria-controls="faq-a-6"><span>What if I want to cancel?</span><span aria-hidden="true">▾</span></button>
+          <div class="faq-a" id="faq-a-6" role="region" aria-labelledby="faq-q-6"><p>Open Settings on your iPhone, tap Subscriptions, tap Mynim, tap Cancel. Done.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" type="button" id="faq-q-7" aria-expanded="false" aria-controls="faq-a-7"><span>Is Mynim available on Android?</span><span aria-hidden="true">▾</span></button>
+          <div class="faq-a" id="faq-a-7" role="region" aria-labelledby="faq-q-7"><p>Mynim is currently available on iPhone only, exclusively through the Apple App Store. We're focused on building the best possible iOS experience right now. Android isn't on the roadmap yet, but if that changes, we'll say something.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="footer-cta">
+    <canvas class="blob-canvas" id="footerBlob" aria-hidden="true"></canvas>
+    <div class="inner fade-up">
+      <h2>Precision dosing deserves a precision tool.</h2>
+      <a class="cta" href="#" aria-label="Download Mynim on the App Store">Coming Soon</a>
+      <p>Free for 7 days. $1.99/month. iPhone only.</p>
+      <p class="mono" style="font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase;">Download on the App Store</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-row">
+      <div>
+        <img src="./assets/mynim-logo-white.png" alt="Mynim" height="28" style="opacity:0.7; display:block; margin-bottom:8px;" />
+        <span style="font-size:0.84rem;">© 2026 <a href="https://herdinglabs.com" target="_blank" rel="noreferrer" style="color:inherit; text-decoration:underline; text-underline-offset:3px;">Herding Labs</a>. All rights reserved.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://herdinglabs.com" target="_blank" rel="noreferrer">Herding Labs</a>
+        <a href="https://herdinglabs.com/privacy.html" target="_blank" rel="noreferrer">Privacy Policy</a>
+        <a href="https://herdinglabs.com/terms.html" target="_blank" rel="noreferrer">Terms of Use</a>
+        <a href="https://herdinglabs.com/support.html" target="_blank" rel="noreferrer">Support</a>
+      </div>
+    </div>
+    <div class="footer-small">Mynim is not affiliated with Novo Nordisk, Eli Lilly, or any pharmaceutical manufacturer. GLP-1 and GIP are drug classes, not brand names. Always consult your healthcare provider before making changes to your medication regimen.</div>
+  </footer>
+
+  <script>
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function initGrain(canvas) {
+      const ctx = canvas.getContext('2d');
+      let frame = 0;
+      let w = 0;
+      let h = 0;
+      let sw = 0;
+      let sh = 0;
+      const tile = document.createElement('canvas');
+      const tctx = tile.getContext('2d');
+      let img = null;
+
+      function resize() {
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w;
+        canvas.height = h;
+        sw = Math.max(1, Math.floor(w / 3));
+        sh = Math.max(1, Math.floor(h / 3));
+        tile.width = sw;
+        tile.height = sh;
+        img = tctx.createImageData(sw, sh);
+      }
+
+      function draw() {
+        const data = img.data;
+        for (let i = 0; i < data.length; i += 4) {
+          const v = Math.floor(Math.random() * 255);
+          data[i] = v;
+          data[i + 1] = v;
+          data[i + 2] = v;
+          data[i + 3] = 24;
+        }
+        tctx.putImageData(img, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(tile, 0, 0, sw, sh, 0, 0, w, h);
+      }
+
+      function tick() {
+        frame += 1;
+        if (frame % 3 === 0) draw();
+        requestAnimationFrame(tick);
+      }
+
+      resize();
+      draw();
+      window.addEventListener('resize', () => {
+        resize();
+        draw();
+      });
+      if (!prefersReducedMotion) requestAnimationFrame(tick);
+    }
+
+    initGrain(document.getElementById('grainCanvas'));
+
+    function initBlobs(canvas, intensity = 1) {
+      const ctx = canvas.getContext('2d');
+      const colors = [
+        'rgba(232, 134, 58, 0.35)',
+        'rgba(212, 96, 58, 0.22)',
+        'rgba(240, 160, 80, 0.18)'
+      ];
+
+      let w = 0;
+      let h = 0;
+      const blobs = Array.from({ length: 4 }, (_, i) => ({
+        x: Math.random(),
+        y: Math.random(),
+        r: 180 + Math.random() * 260,
+        vx: (Math.random() * 0.28 + 0.16) * (Math.random() > 0.5 ? 1 : -1),
+        vy: (Math.random() * 0.22 + 0.12) * (Math.random() > 0.5 ? 1 : -1),
+        c: colors[i % colors.length]
+      }));
+
+      function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = canvas.clientWidth;
+        h = canvas.clientHeight;
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        blobs.forEach((b) => {
+          const gx = b.x * w;
+          const gy = b.y * h;
+          const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, b.r * intensity);
+          grad.addColorStop(0, b.c);
+          grad.addColorStop(1, 'rgba(13, 13, 20, 0)');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(gx, gy, b.r * intensity, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      function tick() {
+        blobs.forEach((b) => {
+          b.x += (b.vx / Math.max(w, 1)) * 2;
+          b.y += (b.vy / Math.max(h, 1)) * 2;
+          if (b.x < -0.1 || b.x > 1.1) b.vx *= -1;
+          if (b.y < -0.1 || b.y > 1.1) b.vy *= -1;
+        });
+        draw();
+        if (!prefersReducedMotion) requestAnimationFrame(tick);
+      }
+
+      resize();
+      draw();
+      if (!prefersReducedMotion) requestAnimationFrame(tick);
+      window.addEventListener('resize', resize);
+    }
+
+    initBlobs(document.getElementById('heroBlob'), 1.1);
+    initBlobs(document.getElementById('footerBlob'), 1.4);
+
+    const fadeEls = document.querySelectorAll('.fade-up');
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('in');
+      });
+    }, { threshold: 0.16 });
+    fadeEls.forEach((el) => fadeObs.observe(el));
+
+    const tickerCards = [...document.querySelectorAll('.ticker-card')];
+    let tickerIndex = 0;
+    function cycleTicker() {
+      if (tickerCards.length < 2) return;
+      const current = tickerCards[tickerIndex];
+      const nextIndex = (tickerIndex + 1) % tickerCards.length;
+      const next = tickerCards[nextIndex];
+      current.classList.remove('active');
+      setTimeout(() => {
+        next.classList.add('active');
+        tickerIndex = nextIndex;
+      }, 500);
+      setTimeout(cycleTicker, 3200);
+    }
+    if (!prefersReducedMotion) {
+      setTimeout(cycleTicker, 2200);
+    } else {
+      tickerCards.forEach((card, i) => card.classList.toggle('active', i === 0));
+    }
+
+    const curveSection = document.getElementById('curveSection');
+    const curveToggles = [...document.querySelectorAll('.curve-toggle')];
+    const curveMain = document.getElementById('curveMain');
+    const curveWeekly = document.getElementById('curveWeekly');
+    const doseLines = [...document.querySelectorAll('.dose-line')];
+    let protocolMode = 'both';
+
+    function setProtocolMode(mode) {
+      protocolMode = mode;
+      curveSection.classList.remove('mode-both', 'mode-micro', 'mode-weekly');
+      curveSection.classList.add(`mode-${mode}`);
+      curveToggles.forEach((btn) => {
+        const key = btn.dataset.mode;
+        const on = mode === 'both' || mode === key;
+        btn.classList.toggle('active', on);
+      });
+    }
+
+    curveToggles.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetMode = btn.dataset.mode;
+        setProtocolMode(protocolMode === targetMode ? 'both' : targetMode);
+      });
+    });
+
+    setProtocolMode('both');
+
+    function prepPath(path) {
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+      return len;
+    }
+
+    if (!prefersReducedMotion) {
+      const mainLen = prepPath(curveMain);
+      const weeklyLen = prepPath(curveWeekly);
+      doseLines.forEach((line) => {
+        const l = line.getTotalLength();
+        line.style.strokeDasharray = l;
+        line.style.strokeDashoffset = l;
+      });
+
+      new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          curveSection.classList.add('curve-live');
+          curveMain.animate([
+            { strokeDashoffset: mainLen },
+            { strokeDashoffset: 0 }
+          ], { duration: 1700, easing: 'cubic-bezier(.25,.1,.25,1)', fill: 'forwards' });
+
+          curveWeekly.animate([
+            { strokeDashoffset: weeklyLen },
+            { strokeDashoffset: 0 }
+          ], { duration: 1500, easing: 'ease', fill: 'forwards' });
+
+          doseLines.forEach((line, i) => {
+            const l = line.getTotalLength();
+            line.animate([
+              { strokeDashoffset: l },
+              { strokeDashoffset: 0 }
+            ], { duration: 560, delay: 900 + i * 220, fill: 'forwards' });
+          });
+        });
+      }, { threshold: 0.3 }).observe(curveSection);
+    } else {
+      curveSection.classList.add('curve-live');
+      [curveMain, curveWeekly].forEach((path) => {
+        path.style.strokeDasharray = 'none';
+        path.style.strokeDashoffset = '0';
+      });
+    }
+
+    const features = [
+      {
+        num: '01',
+        title: "See what's happening inside you. In real time.",
+        p1: 'Mynim calculates your active drug concentration using actual pharmacokinetic modeling. Half-life, absorption rate, bioavailability. Real math, not estimates.',
+        p2: 'Watch your levels rise after a dose and taper as your body metabolizes. Know exactly where you stand before your next injection.',
+        p3: "This isn't a graph someone designed to look clinical. It's a graph that IS clinical."
+      },
+      {
+        num: '02',
+        title: 'Twice daily. Every three days. Whatever works for you.',
+        p1: 'Standard GLP-1 apps give you one option: weekly. Mynim gives you full control over your dosing interval. Daily, twice daily, every few days, weekly. Set it once or adjust as you go.',
+        p2: 'Your protocol is your protocol. Mynim tracks it accurately regardless.',
+        p3: ''
+      },
+      {
+        num: '03',
+        title: 'Stop guessing where you went last.',
+        p1: 'Visual body map. Front and back. Mynim tracks every injection site and when you last used it. A pulsing indicator shows where to go next.',
+        p2: 'Left abdomen, right thigh, upper arm. Rotate properly. Reduce tissue stress. It takes two taps.',
+        p3: ''
+      },
+      {
+        num: '04',
+        title: 'Connect the dots between your dose and how you feel.',
+        p1: 'Log nausea, fatigue, and other side effects by severity after each dose. Track energy, mood, and mental clarity on a 1-10 scale.',
+        p2: 'Over time, patterns emerge. Maybe smaller doses in the morning reduce nausea. Maybe your energy dips correlate with trough levels. Mynim gives you the data to find out.',
+        p3: ''
+      }
+    ];
+
+    const stepEls = document.querySelectorAll('.feature-step');
+    const shotEls = document.querySelectorAll('.shot-frame img');
+
+    function setFeature(i) {
+      const item = features[i];
+      document.getElementById('featureNum').textContent = item.num;
+      document.getElementById('featureTitle').textContent = item.title;
+      document.getElementById('featurePara1').textContent = item.p1;
+      document.getElementById('featurePara2').textContent = item.p2;
+      const p3 = document.getElementById('featurePara3');
+      p3.textContent = item.p3;
+      p3.style.display = item.p3 ? 'block' : 'none';
+      shotEls.forEach((img, idx) => img.classList.toggle('active', idx === i));
+    }
+
+    if (!prefersReducedMotion) {
+      const stepObs = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const i = Number(entry.target.dataset.step);
+          setFeature(i);
+        });
+      }, { threshold: 0.58 });
+      stepEls.forEach((el) => stepObs.observe(el));
+    }
+
+    document.querySelectorAll('.faq-item').forEach((item) => {
+      const btn = item.querySelector('.faq-q');
+      const answer = item.querySelector('.faq-a');
+      btn.addEventListener('click', () => {
+        const open = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        answer.style.maxHeight = open ? `${answer.scrollHeight + 20}px` : '0px';
+        answer.style.paddingBottom = open ? '18px' : '0px';
+      });
+    });
+  </script>
+</body>
+</html>
